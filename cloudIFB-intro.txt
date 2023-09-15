@@ -1,0 +1,110 @@
+CLOUD IFB/BIOSPHERE: Premiers Pas
+==================================
+Daniel Gautheret 2/9/23
+
+URL accès Cloud IFB:
+https://biosphere.france-bioinformatique.fr/cloudweb/login/?next=/cloud/
+
+Création compte Edugain
+-----------------------
+- Créez votre compte sur Edugain en demandant de vous rattacher au groupe "Reprohack2023"
+  https://ifb-elixirfr.github.io/biosphere/signin
+
+
+Clé Publique
+-------------
+Ces opérations sont à réaliser avant de créer des VM et pour _toutes_
+les stations à partir desquelles vous voulez vous connecter au cloud. 
+
+- Entrez dans le terminal (ou WSL+terminal si station Windows): 
+    ssh-keygen -t rsa
+  Acceptez toutes les réponses par défaut
+- Dans le dossier .ssh affichez le fichier id_rsa.pub (clé publique)
+   (il est impératif que les fichiers de clés publique/privée soient dans .ssh)
+- Rendez-vous sur Biosphere 
+    https://biosphere.france-bioinformatique.fr/
+  Accédez aux paramètres de votre compte
+  Passez en mode édition 
+  Copiez le contenu du fichier de clé publique dans le champ Pubkey
+    (commence par ssh-rsa et se termine par votre username@id)
+
+
+Création VM
+-------------
+- Sur Biosphère/Rainbio, choisissez une VM IFB de type: "Ubuntu" avec Bioconda installé.
+  Lancez la VM avec "déploiement avancé" en choisissant le plus petit gabarit avec RAM de 16Go. 
+
+- Sur Biosphere/MyVM, attentez de voir l'icone ssh s'afficher auprès de votre VM 
+  (10 minutes d'attente) 
+  Vous avez une VM. 
+
+
+Connection à la VM
+-------------------
+- Attention: votre machine de départ doit avoir sa clé publique entrée sur Biosphere
+  _avant_ la création de la VM 
+- Si vous êtes sur un réseau extérieur (maison, Eduroam), vous pouvez directement 
+  vous connecter par ssh depuis votre terminal avec l'URL donnée sous le lien "ssh"
+    Par exemple: ssh ssh://ubuntu@134.158.247.53
+- Si vous êtes sur une machine du PUIO, vous devez vous connecter d'abord sur une machine
+  passerelle visible de l'exterieur:
+    ssh ssh1.pgip.universite-paris-saclay.fr
+  puis
+    ssh ssh://ubuntu@134.158.247.53  
+       (^^remplacez par l'url de votre VM telle que donnée par le lien "ssh" de la page Déploiements)
+
+
+Premiers tests sur la VM
+------------------------
+- Avec un editeur (nano, vi), créez un script bash et sauvez-le. Par exemple:
+    #!/bin/bash
+    MYVAR="hello world"
+    echo $MYVAR
+- Pour exécuter le script, 3 options:
+    source <script>
+    sh <script>
+    chmod +x <script>  puis: ./<script>
+
+
+Récupérer un fichier de ma VM sur ma machine locale
+-----------------------------------------------------
+- A partir de ma machine locale:
+    scp scp://ubuntu@134.158.247.53/<chemin>/<fichier> .
+  (remplacez par l'url de votre VM)
+  Ne pas oublier le point final qui désigne le dossier cible, comme dans la commande cp.
+
+
+Installation d'outils
+----------------------
+- Vous êtes root sur votre VM. Vous pouvez y installer ce que vous voulez. 
+  Deux méthodes:
+    sudo apt install <software>
+  ou
+    conda install <software>
+  (dépend des VM)
+- Bonne pratique:
+  Sauvegardez toutes vos commandes d'installation et copie de fichiers dans un script 
+  que vous garderez sur votre station locale. 
+  Ceci vous permettra de tout réinstaller rapidement si vous changez de VM.
+
+
+Créer une archive sur ma VM
+-----------------------------
+- Sur la VM (en ssh):
+  Creez un fichier dans le dossier data. 
+  Placez-vous un niveau au dessus du dossier. 
+  Utilisez la commande tar pour archiver le dossier et tout ce qu'il contient.
+  (par exemple ici je veux archiver le dossier "data")
+    tar -zcvf data.tar.gz data
+  Ceci crée l'archive compressée data.tar.gz
+  Vous pouvez la récupérer sur votre machine locale avec scp, puis la désarchiver 
+  avec:
+    tar -zxvf data.tar.gz 
+
+
+Gérer l'espace et les dossiers de la VM
+----------------------------------------
+Sur certaines VM, le repertoire /home a un espace limité (par ex. 20Go). Vous pouvez voir les différents volumes de stockage avec la commande "du -h" et éventuellement travailler dans un autre répertoire. 
+
+
+
