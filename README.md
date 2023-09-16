@@ -6,7 +6,7 @@
   
 - Recupération du dépot git
   
-' git clone https://github.com/Elora-V/NGS-M2AMI2B.git ' 
+''' git clone https://github.com/Elora-V/NGS-M2AMI2B.git ''' 
 
 - Installation outils
 
