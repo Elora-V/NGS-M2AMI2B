@@ -32,7 +32,7 @@ cd NGS-M2AMI2B
 - Installation outils
 
 ```bash 
-sh ./scr/EnvirRNAseq.sh
+sh ./src/EnvirRNAseq.sh
 ```
 
 - Recupération résultats présent en local (si besoin)
@@ -45,10 +45,10 @@ scp cheminLocal ubuntu@134.158.248.133:${chemin sur VM ou .}
 <h3> Analyse RNA-seq </h3>
 
 ```bash 
-sh ./scr/AnalyseRNAseq.sh
+sh ./src/AnalyseRNAseq.sh
 ```
 
-Ce script crée un dossier `data`où sont les fasta à analyser, et un dossier `result` comprennant les résultats des différentes étapes.
+Ce srcipt crée un dossier `data`où sont les fasta à analyser, et un dossier `result` comprennant les résultats des différentes étapes.
 
 
 <h3> Récupérer les résultats et quitter la VM </h3>
@@ -62,8 +62,8 @@ scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} 
 - Recupérer code sur git
 
 ```bash 
-git add ./scr/EnvirRNAseq.sh
-git add ./scr/AnalyseRNAseq.sh
+git add ./src/EnvirRNAseq.sh
+git add ./src/AnalyseRNAseq.sh
 ```
 Ou tous récupérer mais faut supprimer les docciers trop lourd ! ( dossier data et result ).
   
