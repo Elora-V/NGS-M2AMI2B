@@ -1,5 +1,13 @@
 # NGS-M2AMI2B
 
+
+<h3> Connection à la machine virtuelle </h3>
+
+
+```bash
+ssh [mettre url ssh VM]
+```
+
 <h3> Configuration environnement </h3>
 
 - Installer git
@@ -23,9 +31,36 @@ Le dépot git est composé d'un dossier `doc` contenant des documents tel que le
 sh ./scr/EnvirRNAseq.sh
 ```
 
+- Recupération résultats présent en local (si besoin)
+
+```bash
+# scp source target
+scp cheminLocal ubuntu@134.158.248.133:${chemin sur VM ou .}
+```
+
 <h3> Analyse RNA-seq </h3>
 
 ```bash 
 sh ./scr/AnalyseRNAseq.sh
 ```
+
+Ce script crée un dossier `data`où sont les fasta à analyser, et un dossier `result` comprennant les résultats des différentes étapes.
+
+
+<h3> Récupérer les résultats et quitter la VM </h3>
+
+- Recupérer les résultats
+
+```bash
+scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} #remplacer url VM
+```
+
+- Quitter la VM
+
+```bash
+exit
+```
+
+
+
 
