@@ -6,13 +6,19 @@
   
 - Recupération du dépot git
   
-```bash git clone https://github.com/Elora-V/NGS-M2AMI2B.git ```
+```bash
+git clone https://github.com/Elora-V/NGS-M2AMI2B.git
+ ```
 
 - Installation outils
 
-```bash sh ./scr/EnvirRNAseq.sh ```
+```bash 
+sh ./scr/EnvirRNAseq.sh
+```
 
 <h3> Analyse RNA-seq </h3>
 
-```bash sh ./scr/AnalyseRNAseq.sh ```
+```bash 
+sh ./scr/AnalyseRNAseq.sh
+```
 
