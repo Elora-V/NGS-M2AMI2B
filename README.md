@@ -34,7 +34,7 @@ sh ./scr/EnvirRNAseq.sh
 - Recupération résultats présent en local (si besoin)
 
 ```bash
-# scp source target
+# scp source target (Faire en local !!)
 scp cheminLocal ubuntu@134.158.248.133:${chemin sur VM ou .}
 ```
 
@@ -52,9 +52,17 @@ Ce script crée un dossier `data`où sont les fasta à analyser, et un dossier `
 - Recupérer les résultats
 
 ```bash
-scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} #remplacer url VM
+scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} #remplacer url VM, (Faire en local !!)
 ```
 
+- Recupérer code sur git
+
+```bash 
+git add ./scr/EnvirRNAseq.sh
+git add ./scr/AnalyseRNAseq.sh
+```
+Ou tous récupérer mais faut supprimer les docciers trop lourd ! ( dossier data et result ).
+  
 - Quitter la VM
 
 ```bash
