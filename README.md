@@ -10,7 +10,7 @@ ssh [mettre url ssh VM]
 
 <h3> Configuration environnement </h3>
 
-- Installer git
+- Installer git (si besoin)
 
 ```bash
 sudo apt update
