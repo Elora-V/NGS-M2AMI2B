@@ -1,7 +1,10 @@
 
 #!/bin/bash
 
-directory="TPRNAseq"
-dirfasta="fasta"
-dirfastqc="result_fastqc"
-dirtrim="result_trim"
+pathCode="./src"
+pathData="./data"
+pathResult="./result"
+
+resultFastqc="result_fastqc"
+resultTrim="result_trim"
+resultTrimFastqc="fastqc_of_trim"
