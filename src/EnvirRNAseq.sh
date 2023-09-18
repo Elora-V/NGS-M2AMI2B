@@ -14,6 +14,8 @@ conda install -c bioconda trimmomatic
 
 conda install -c bioconda star 
 
+conda install -c bioconda samtools 
+
 conda activate
 
 

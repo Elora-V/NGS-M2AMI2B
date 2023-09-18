@@ -110,9 +110,8 @@ fi
 #### 3.Star
 ########################
 
-resultStar="result_star"
-resultStarindex="result_star_index"
-resultStaralign="result_star_align"
+
+### Recupérer le genome complet pour le mappage en partie 0
 
 if [ ! -d "$pathResult"/"$resultStar" ] # si pas le dossier star : on fait etape star
 then
@@ -151,6 +150,21 @@ then
 
 fi
 
+########################
+#### 4.SAmtools
+########################
 
-### Recupérer le genome complet pour le mappage en partie 0
 
+if [ ! -d "$pathResult"/"$resultSamtools" ] # si pas le dossier star : on fait etape star
+then
+	mkdir "$pathResult"/"$resultSamtools"
+
+	fileBam=$( ls "$pathResult"/"$resultStar"/"$resultStaralign"/*.bam ) # liste des fichier  bam
+	for i in ${fileBam} # pour chacun d'eux :
+	do
+		samtools index $i 
+		mv "$i".bai "$pathResult"/"$resultSamtools" # met index dans dossier créer pour ça
+		# mv fichier nouvelleLocalisation
+		
+	done
+fi
