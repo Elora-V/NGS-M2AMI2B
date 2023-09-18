@@ -11,6 +11,9 @@
 conda install -c bioconda fastqc # faut bioconda, conda remove fastqc
 
 conda install -c bioconda trimmomatic 
+
+conda install -c bioconda star 
+
 conda activate
 
 

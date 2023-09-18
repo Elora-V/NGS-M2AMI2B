@@ -12,10 +12,21 @@ if [ ! -d "$pathData" ] # si pas le dossier pour ranger les données :
 then
 
 	mkdir $pathData
+
+	### sequences ARN :
 	wget http://rssf.i2bc.paris-saclay.fr/X-fer/AtelierNGS/TPrnaseq.tar.gz -P $pathData
 	# wget [url] -P [dossier]
 	tar -zxvf $pathData/TPrnaseq.tar.gz -C $pathData
 	# tar -zxvf [fichier_à_desarchiver] -C dossier cible
+
+	### genome humain :
+	wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/chromosomes/chr18.fa.gz -P $pathData
+	gunzip $pathData/chr18.fa.gz # decompresser format fasta
+
+	### annotation genome :
+	wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/GRCh37_mapping/gencode.v24lift37.basic.annotation.gtf.gz -P $pathData
+	gunzip $pathData/gencode.v24lift37.basic.annotation.gtf.gz # decompresser format gtf
+
 	chmod +rx $pathData/*.fastq #blocage plus loin si pas les droits
 
 fi
@@ -94,12 +105,24 @@ then
 
 fi	
 
-# BIZARRE : seq lenght distribution moins bon apres trim et le reste pareil ?????????????????????????????????????????
-#??????????????????????????????????????		
+
+########################
+#### 3.Star
+########################
+
+resultStar="result_star"
+resultStarindex="result_star_index"
+
+if [ ! -d "$pathResult"/"$resultStar" ] # si pas le dossier trim : on fait etape trim
+then
+
+STAR --runMode genomeGenerate --runThreadN 4 \
+--genomeDir $pathResult/$resultStar/$resultStarindex \
+--genomeFastaFiles $pathData/chr18.fa \
+--sjdbGTFfile $pathData/gencode.v24lift37.basic.annotation.gtf
+
+fi
 
 
+### Recupérer le genome complet pour le mappage en partie 0
 
-
-
-
-### exit 
