@@ -56,10 +56,16 @@ Ce srcipt crée un dossier `data`où sont les fasta à analyser, et un dossier `
 - Recupérer les résultats
   
 ```bash
-tar -czvf data.tar.gz data # avant on les compresse
+tar -czvf result.tar.gz result # avant on compresse les resultats
+
 ```
+
 ```bash
 scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} #remplacer url VM, (Faire en local !!)
+```
+
+```bash
+tar -zxvf result.tar.gz # on decompresse en local si veut voir les resultats
 ```
 
 - Recupérer code sur git
