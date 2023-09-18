@@ -155,16 +155,20 @@ fi
 ########################
 
 
-if [ ! -d "$pathResult"/"$resultSamtools" ] # si pas le dossier star : on fait etape star
+if ! find "$pathResult"/"$resultStar"/"$resultStaralign" -type f -name "*.bai" | grep -q . 
+# si pas de bai : on fait etape samtools
+
+
+# ???????????? esxplication if
+
+
 then
-	mkdir "$pathResult"/"$resultSamtools"
+	
 
 	fileBam=$( ls "$pathResult"/"$resultStar"/"$resultStaralign"/*.bam ) # liste des fichier  bam
 	for i in ${fileBam} # pour chacun d'eux :
 	do
 		samtools index $i 
-		mv "$i".bai "$pathResult"/"$resultSamtools" # met index dans dossier créer pour ça
-		# mv fichier nouvelleLocalisation
 		
 	done
 fi
