@@ -112,14 +112,42 @@ fi
 
 resultStar="result_star"
 resultStarindex="result_star_index"
+resultStaralign="result_star_align"
 
-if [ ! -d "$pathResult"/"$resultStar" ] # si pas le dossier trim : on fait etape trim
+if [ ! -d "$pathResult"/"$resultStar" ] # si pas le dossier star : on fait etape star
 then
 
-STAR --runMode genomeGenerate --runThreadN 4 \
---genomeDir $pathResult/$resultStar/$resultStarindex \
---genomeFastaFiles $pathData/chr18.fa \
---sjdbGTFfile $pathData/gencode.v24lift37.basic.annotation.gtf
+	mkdir $pathResult/$resultStar
+	mkdir $pathResult/$resultStar/$resultStarindex
+	mkdir $pathResult/$resultStar/$resultStaralign
+
+	### index star
+	STAR --runMode genomeGenerate --runThreadN 4 \
+	--genomeDir $pathResult/$resultStar/$resultStarindex \
+	--genomeFastaFiles $pathData/chr18.fa \
+	--sjdbGTFfile $pathData/gencode.v24lift37.basic.annotation.gtf
+
+	### application star pour chaque duo R1-R2
+
+	fileP1trim=$( ls "$pathResult"/"$resultTrim"/*1P.fastq ) # nom complet fichier P1 de trim
+
+	for i in ${fileP1trim} # pour chacun d'eux :
+	do
+		# on cherche le nom du fichier avant le 1P sans le chemin complet (ce qui correspond à *) :
+		nameFile=$(basename "$i" | sed 's/1P.fastq$//') 
+		nameFileShort=$(echo "$nameFile" | sed 's/.sampled_$//') # enleve bout moche du nom pour nommer resultat
+
+		# applique star sur R1 - R2
+		STAR --runThreadN 4 --outFilterMultimapNmax 1\
+		--genomeDir  $pathResult/$resultStar/$resultStarindex \
+		--outSAMattributes All --outSAMtype BAM SortedByCoordinate \
+		--outFileNamePrefix  $pathResult/$resultStar/$resultStaralign/$nameFileShort \
+		--readFilesIn "$pathResult"/"$resultTrim"/"$nameFile"1P.fastq "$pathResult"/"$resultTrim"/"$nameFile"2P.fastq
+			
+							
+	done
+
+
 
 fi
 
