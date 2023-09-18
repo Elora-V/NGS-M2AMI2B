@@ -54,7 +54,10 @@ Ce srcipt crée un dossier `data`où sont les fasta à analyser, et un dossier `
 <h3> Récupérer les résultats et quitter la VM </h3>
 
 - Recupérer les résultats
-
+  
+```bash
+tar -czvf data.tar.gz data # avant on les compresse
+```
 ```bash
 scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} #remplacer url VM, (Faire en local !!)
 ```
@@ -65,7 +68,7 @@ scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} 
 git add ./src/EnvirRNAseq.sh
 git add ./src/AnalyseRNAseq.sh
 ```
-Ou tous récupérer mais faut supprimer les docciers trop lourd ! ( dossier data et result ).
+Ou tous récupérer mais faut supprimer les dossiers trop lourd ! ( dossier data et result ).
   
 - Quitter la VM
 
