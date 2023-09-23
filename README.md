@@ -89,8 +89,9 @@ tar -zxvf result.tar.gz # on decompresse en local si veut voir les resultats
 - Recupérer code sur git (si besoin)
 
 ```bash 
-git add ./src/EnvirRNAseq.sh
-git add ./src/AnalyseRNAseq.sh
+git add ./src/*
+git commit -m "message"
+git push
 ```
 Ou tous récupérer mais faut supprimer les dossiers trop lourd ! ( dossier data et result ).
   
