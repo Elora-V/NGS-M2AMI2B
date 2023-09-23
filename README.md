@@ -52,6 +52,22 @@ sh ./src/AnalyseRNAseq.sh
 
 Ce script crée un dossier `data`où sont les fasta à analyser, et un dossier `result` comprennant les résultats des différentes étapes.
 
+```bash
+# avec les noms actuels du fichier config.sh, voilà ce que ça donne :
+
+├── data
+├── doc
+├── result
+│   ├── result_counts
+│   ├── result_fastqc
+│   ├── result_star
+│   │   ├── result_star_align
+│   │   └── result_star_index
+│   └── result_trim
+│       └── fastqc_of_trim
+└── src
+
+```bash 
 
 <h3> Récupérer les résultats et quitter la VM </h3>
 
