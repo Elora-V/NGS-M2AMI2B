@@ -10,8 +10,7 @@ echo "Environnement conda "
 echo "#########################################################"
 echo ""
 
-conda init bash
-conda create -n RNAseq
+conda create --name RNA_Seq
 
 echo ""
 echo "#########################################################"  
@@ -19,7 +18,15 @@ echo "Activation conda"
 echo "#########################################################"
 echo ""
 
-conda activate RNAseq
+conda activate RNA_Seq
+
+# Vérification de l'activation réussie
+if [ $? -eq 0 ]; then
+    echo "L'environnement conda RNA-seq a été activé avec succès."
+else
+    echo "Erreur lors de l'activation de l'environnement conda."
+    exit 1  # Quitte le script en cas d'erreur
+fi
 
 ########################
 ### install tools 
