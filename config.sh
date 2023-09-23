@@ -5,6 +5,8 @@ pathCode="./src"
 pathData="./data"
 pathResult="./result"
 
+# Les noms suivants peuvent être modifiés pour choisir le nom des dossiers de résultats.
+
 resultFastqc="result_fastqc"
 resultTrim="result_trim"
 resultTrimFastqc="fastqc_of_trim"

@@ -28,6 +28,13 @@ else
     exit 1  # Quitte le script en cas d'erreur
 fi
 
+# Explication du if :
+    
+# -  $? est une variable spéciale qui stocke le code de sortie de la dernière commande exécutée.
+#    Un code de sortie de 0 signifie généralement que la commande s'est terminée sans erreur.
+
+# -  -eq est un opérateur de comparaison qui signifie "égal à".
+
 ########################
 ### install tools 
 ########################
@@ -82,6 +89,8 @@ conda install -c bioconda subread
 ########################
 #### get file
 ########################
+
+# Memo des commandes pour récupérer un fichier de la VM à l'ordinateur local, ou inversement :
 
 # Vers local (en local) : scp source target (. ici)
 #scp scp://ubuntu@voirSSHutilisé/<chemin>/<fichier> .

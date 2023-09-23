@@ -32,7 +32,9 @@ cd NGS-M2AMI2B
 - Installation outils
 
 ```bash 
-sh ./src/EnvirRNAseq.sh
+source ./src/EnvirRNAseq.sh
+# mettre source est non pas sh est important: sinon cela entraine un probleme d'environnement conda 
+#(conda activate ne fonctionne pas dans le script alors qu'il fonctionne en ligne de commande directement dans le terminal)
 ```
 
 - Recupération résultats présent en local (si besoin)
@@ -48,12 +50,12 @@ scp cheminLocal ubuntu@134.158.248.133:${chemin sur VM ou .}
 sh ./src/AnalyseRNAseq.sh
 ```
 
-Ce srcipt crée un dossier `data`où sont les fasta à analyser, et un dossier `result` comprennant les résultats des différentes étapes.
+Ce script crée un dossier `data`où sont les fasta à analyser, et un dossier `result` comprennant les résultats des différentes étapes.
 
 
 <h3> Récupérer les résultats et quitter la VM </h3>
 
-- Recupérer les résultats
+- Recupérer les résultats (si besoin)
   
 ```bash
 tar -czvf result.tar.gz result # avant on compresse les resultats
@@ -68,7 +70,7 @@ scp ubuntu@134.158.248.133:${fichier_VM} ${lieu arrivée (. si pas précision)} 
 tar -zxvf result.tar.gz # on decompresse en local si veut voir les resultats
 ```
 
-- Recupérer code sur git
+- Recupérer code sur git (si besoin)
 
 ```bash 
 git add ./src/EnvirRNAseq.sh
