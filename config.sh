@@ -13,4 +13,4 @@ resultTrimFastqc="fastqc_of_trim"
 resultStar="result_star"
 resultStarindex="result_star_index"
 resultStaralign="result_star_align"
-
+resultFeatureCounts="result_counts"

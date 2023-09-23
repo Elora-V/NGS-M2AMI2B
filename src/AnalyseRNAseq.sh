@@ -253,6 +253,70 @@ then
 	done
 fi
 
+########################
+#### 5.Feature counts
+########################
 
+
+if [ ! -d "$pathResult"/"$resultFeatureCounts" ] # si pas le dossier counts : on fait etape counts
+then
+	echo ""
+	echo "#########################################################"  
+	echo "Etape feature counts"
+	echo "#########################################################"
+	echo ""
+
+	mkdir $pathResult/$resultFeatureCounts
+
+	featureCounts -p -t exon -g gene_id \
+	-a $pathData/gencode.v24lift37.basic.annotation.gtf \
+	-o $pathResult/$resultFeatureCounts/comptage.txt \
+	$pathResult/$resultStar/$resultStaralign/*.bam
+	# featureCounts -p -t exon -g gene_id -a {annotation.gtf} -o {sortie} {bam}
+
+
+
+	# Le fichier de sortie contient un tableau de comptages avec les informations suivantes :
+
+	# Geneid : Identifiant du gène.
+	# Chr : Chromosome sur lequel le gène est situé.
+	# Start : Position de départ du gène sur le chromosome.
+	# End : Position de fin du gène sur le chromosome.
+	# Strand : Orientation du gène (+ ou -).
+	# Length : Longueur du gène.
+	# ... : Les colonnes suivantes représentent les échantillons, et chaque cellule contient le nombre de lectures alignées sur le gène correspondant dans l'échantillon spécifique.
+	
+
+	# on trie le resultat 
+	sort $pathResult/$resultFeatureCounts/comptage.txt \
+	> $pathResult/$resultFeatureCounts/sortComptage.txt
+	# tri est effectué sur la première colonne (Geneid) par défaut
+
+
+	# Récupérer les noms de gènes avec perl (langage pour regex) :
+
+	perl -ne 'print "$1 $2\n" if /gene_id \"(.*?)\".*gene_name \"(.*?)\"/' \
+	$pathData/gencode.v24lift37.basic.annotation.gtf | sort | uniq \
+	> $pathResult/$resultFeatureCounts/sort_id_name.txt
+
+	#  -ne non-interactif  pour traiter chaque ligne du fichier gtf en entrée.
+	#
+	# if /gene_id \"(.*?)\".*gene_name \"(.*?)\"/ : Cette partie utilise une expression régulière pour rechercher 
+	# des motifs dans la ligne en cours. On recupère l'id du gene et son nom  et on les stocke dans les variables $1 et $2.
+	#
+	# on sort les lignes "id name" et on supprime les doublons (uniq)
+
+
+	# On assemble (join) ces deux fichiers :
+	# cela permet d'avoir les compte avec les noms de gènes, et pas que id 
+	# On passe de plus par un filtre : on garde que les lignes avec "chr18"
+
+	join $pathResult/$resultFeatureCounts/sortComptage.txt $pathResult/$resultFeatureCounts/sort_id_name.txt  \
+	|grep "chr18" \
+	> $pathResult/$resultFeatureCounts/comptageAnnot.txt
+
+	######### PAS FINI : mais resultats bizarre de counts (le tableau est moche)
+
+fi
 
 
