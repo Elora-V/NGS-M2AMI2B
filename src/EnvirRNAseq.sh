@@ -6,15 +6,33 @@
 ### install tools 
 ########################
 
+# réalisé avec l'aide de bioconda :
+# conda install -c bioconda [nom outils]
+# conda remove [nom outils]
 
 
-conda install -c bioconda fastqc # faut bioconda, conda remove fastqc
+echo -e "######################################################### \n  Installation fastqc \n 
+######################################################### \n "
+
+conda install -c bioconda fastqc 
+
+echo -e "######################################################### \n  Installation trimmomatic \n 
+######################################################### \n "
 
 conda install -c bioconda trimmomatic 
 
+echo -e "######################################################### \n  Installation star \n 
+######################################################### \n "
+
 conda install -c bioconda star 
 
+echo -e "######################################################### \n  Installation samtools \n 
+######################################################### \n "
+
 conda install -c bioconda samtools 
+
+echo -e "######################################################### \n  Activation conda \n 
+######################################################### \n "
 
 conda activate
 

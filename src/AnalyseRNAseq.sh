@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./config.sh
+. ./config.sh  # on récupère les noms de chemins et dossiers du fichier de configuration
 
 
 
@@ -11,19 +11,25 @@
 if [ ! -d "$pathData" ] # si pas le dossier pour ranger les données :
 then
 
-	mkdir $pathData
+	mkdir $pathData # on créer le dossier et on telecharge les données :
 
 	### sequences ARN :
+	echo -e "######################################################### \n  Telechargement sequences ARN \n 
+	######################################################### \n "
 	wget http://rssf.i2bc.paris-saclay.fr/X-fer/AtelierNGS/TPrnaseq.tar.gz -P $pathData
 	# wget [url] -P [dossier]
 	tar -zxvf $pathData/TPrnaseq.tar.gz -C $pathData
 	# tar -zxvf [fichier_à_desarchiver] -C dossier cible
 
 	### genome humain :
+	echo -e "######################################################### \n  Telechargement genome humain \n 
+	######################################################### \n "
 	wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/chromosomes/chr18.fa.gz -P $pathData
 	gunzip $pathData/chr18.fa.gz # decompresser format fasta
 
 	### annotation genome :
+	echo -e "######################################################### \n  Telechargement annotation genome \n 
+	######################################################### \n "
 	wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/GRCh37_mapping/gencode.v24lift37.basic.annotation.gtf.gz -P $pathData
 	gunzip $pathData/gencode.v24lift37.basic.annotation.gtf.gz # decompresser format gtf
 
@@ -31,19 +37,21 @@ then
 
 fi
 
-## commande pour plus info sur fichiers
+## commande pour plus info sur fichiers :
 # more nomfichier (voir fichier)
 # ls -lh (voir taille fichier, chiffre au milieu)
 # wc nomfichier ( number of lines, characters, words, and bytes of a file )
 
 
 
-
 if [ ! -d "$pathResult" ] # si pas le dossier pour ranger les resultats :
 then
 
-	mkdir $pathResult
+	mkdir $pathResult # on le créér
 fi
+
+
+
 
 
 ########################
@@ -55,11 +63,13 @@ then
 
 	mkdir $pathResult/$resultFastqc
 
+	echo -e "######################################################### \n  Etape fastqc \n 
+	######################################################### \n "
+
 	fastqc $pathData/*.fastq -o $pathResult/$resultFastqc
 	# fastqc [fichier (wildcard possible)] -o dossier cible
 	# donne .html et .zip 
 fi
-
 
 
 
@@ -74,6 +84,9 @@ if [ ! -d "$pathResult"/"$resultTrim" ] # si pas le dossier trim : on fait etape
 then
 
 	mkdir $pathResult/$resultTrim
+
+		echo -e "######################################################### \n  Etape trimmomatic \n 
+	######################################################### \n "
 
 	fileR1=$( ls "$pathData"/*.R1.fastq ) # on recupère les noms (complet) des fichiers R1
 	# "$variable"mot ou $variable'mot'
