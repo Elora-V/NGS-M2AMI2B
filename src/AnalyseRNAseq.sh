@@ -14,22 +14,37 @@ then
 	mkdir $pathData # on créer le dossier et on telecharge les données :
 
 	### sequences ARN :
-	echo -e "######################################################### \n  Telechargement sequences ARN \n 
-	######################################################### \n "
+
+	echo ""
+	echo "#########################################################"  
+	echo "Telechargement sequences ARN"
+	echo "#########################################################"
+	echo ""
+
 	wget http://rssf.i2bc.paris-saclay.fr/X-fer/AtelierNGS/TPrnaseq.tar.gz -P $pathData
 	# wget [url] -P [dossier]
 	tar -zxvf $pathData/TPrnaseq.tar.gz -C $pathData
 	# tar -zxvf [fichier_à_desarchiver] -C dossier cible
 
 	### genome humain :
-	echo -e "######################################################### \n  Telechargement genome humain \n 
-	######################################################### \n "
+
+	echo ""
+	echo "#########################################################"  
+	echo "Telechargement genome humain"
+	echo "#########################################################"
+	echo ""
+
 	wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/chromosomes/chr18.fa.gz -P $pathData
 	gunzip $pathData/chr18.fa.gz # decompresser format fasta
 
 	### annotation genome :
-	echo -e "######################################################### \n  Telechargement annotation genome \n 
-	######################################################### \n "
+
+	echo ""
+	echo "#########################################################"  
+	echo "Telechargement annotation genome"
+	echo "#########################################################"
+	echo ""
+
 	wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/GRCh37_mapping/gencode.v24lift37.basic.annotation.gtf.gz -P $pathData
 	gunzip $pathData/gencode.v24lift37.basic.annotation.gtf.gz # decompresser format gtf
 
@@ -60,11 +75,13 @@ fi
 
 if [ ! -d "$pathResult"/"$resultFastqc" ] # si pas le dossier fastqc : on fait etape fastqc
 then
+	echo ""
+	echo "#########################################################"  
+	echo "Etape fastqc"
+	echo "#########################################################"
+	echo ""
 
 	mkdir $pathResult/$resultFastqc
-
-	echo -e "######################################################### \n  Etape fastqc \n 
-	######################################################### \n "
 
 	fastqc $pathData/*.fastq -o $pathResult/$resultFastqc
 	# fastqc [fichier (wildcard possible)] -o dossier cible
@@ -83,10 +100,14 @@ fi
 if [ ! -d "$pathResult"/"$resultTrim" ] # si pas le dossier trim : on fait etape trim
 then
 
+	echo ""
+	echo "#########################################################"  
+	echo "Etape trimmomatic"
+	echo "#########################################################"
+	echo ""
+
 	mkdir $pathResult/$resultTrim
 
-		echo -e "######################################################### \n  Etape trimmomatic \n 
-	######################################################### \n "
 
 	fileR1=$( ls "$pathData"/*.R1.fastq ) # on recupère les noms (complet) des fichiers R1
 	# "$variable"mot ou $variable'mot'
@@ -128,6 +149,11 @@ fi
 
 if [ ! -d "$pathResult"/"$resultStar" ] # si pas le dossier star : on fait etape star
 then
+	echo ""
+	echo "#########################################################"  
+	echo "Etape star"
+	echo "#########################################################"
+	echo ""
 
 	mkdir $pathResult/$resultStar
 	mkdir $pathResult/$resultStar/$resultStarindex
@@ -164,19 +190,22 @@ then
 fi
 
 ########################
-#### 4.SAmtools
+#### 4.Samtools
 ########################
 
 
 if ! find "$pathResult"/"$resultStar"/"$resultStaralign" -type f -name "*.bai" | grep -q . 
 # si pas de bai : on fait etape samtools
 
-
 # ???????????? esxplication if
 
-
 then
-	
+
+	echo ""
+	echo "#########################################################"  
+	echo "Etape samtools"
+	echo "#########################################################"
+	echo ""
 
 	fileBam=$( ls "$pathResult"/"$resultStar"/"$resultStaralign"/*.bam ) # liste des fichier  bam
 	for i in ${fileBam} # pour chacun d'eux :
@@ -185,3 +214,4 @@ then
 		
 	done
 fi
+

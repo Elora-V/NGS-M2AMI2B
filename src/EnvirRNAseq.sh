@@ -1,6 +1,25 @@
 #!/bin/bash
 
+########################
+### Environnement conda 
+########################
 
+echo ""
+echo "#########################################################"  
+echo "Environnement conda "
+echo "#########################################################"
+echo ""
+
+conda init bash
+conda create -n RNAseq
+
+echo ""
+echo "#########################################################"  
+echo "Activation conda"
+echo "#########################################################"
+echo ""
+
+conda activate RNAseq
 
 ########################
 ### install tools 
@@ -10,31 +29,47 @@
 # conda install -c bioconda [nom outils]
 # conda remove [nom outils]
 
-
-echo -e "######################################################### \n  Installation fastqc \n 
-######################################################### \n "
+echo ""
+echo "#########################################################"  
+echo "Installation fastqc"
+echo "#########################################################"
+echo ""
 
 conda install -c bioconda fastqc 
 
-echo -e "######################################################### \n  Installation trimmomatic \n 
-######################################################### \n "
+echo ""
+echo "#########################################################"  
+echo "Installation trimmomatic"
+echo "#########################################################"
+echo ""
 
 conda install -c bioconda trimmomatic 
 
-echo -e "######################################################### \n  Installation star \n 
-######################################################### \n "
+echo ""
+echo "#########################################################"  
+echo "Installation star"
+echo "#########################################################"
+echo ""
 
 conda install -c bioconda star 
 
-echo -e "######################################################### \n  Installation samtools \n 
-######################################################### \n "
+echo ""
+echo "#########################################################"  
+echo "Installation samtools"
+echo "#########################################################"
+echo ""
 
 conda install -c bioconda samtools 
 
-echo -e "######################################################### \n  Activation conda \n 
-######################################################### \n "
 
-conda activate
+
+echo ""
+echo "#########################################################"  
+echo "Installation subread (feature count)"
+echo "#########################################################"
+echo ""
+
+conda install -c bioconda subread
 
 
 ########################
@@ -47,6 +82,5 @@ conda activate
 
 # Vers VM (en local) : scp source target 
 # scp cheminLocal ubuntu@134.158.248.133:.
-
 
 
