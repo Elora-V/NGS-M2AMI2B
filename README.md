@@ -67,7 +67,7 @@ Ce script crée un dossier `data`où sont les fasta à analyser, et un dossier `
 │       └── fastqc_of_trim
 └── src
 
-```bash 
+``` 
 
 <h3> Récupérer les résultats et quitter la VM </h3>
 
