@@ -2,6 +2,23 @@
 
 . ./config.sh  # on récupère les noms de chemins et dossiers du fichier de configuration
 
+# On récupère ensuite les arguments de la ligne de commande
+while getopts a:d: flag
+do
+    case "${flag}" in
+        a) all=${OPTARG};;  # indique si on veut faire les étapes fastqc et d'index (vrai si on veut, faux sinon)
+        d) pathfasta=${OPTARG};; # chemin vers le dossier contenat les fichiers fasta
+    esac
+done
+
+
+# On transforme la variable all en booléen (0-1)
+if [ "$all" = "T" ] || [ "$all" = "True" ] || [ "$all" = "true" ] || [ "$all" = "t" ]
+then
+  All=1 # vrai
+else
+  All=0 # faux
+fi
 
 
 ########################
@@ -16,16 +33,24 @@ then
 
 	### sequences ARN :
 
-	echo ""
-	echo "#########################################################"  
-	echo "Telechargement sequences ARN"
-	echo "#########################################################"
-	echo ""
+	# si on a pas un chemin vers les fasta on les télécharge :
+	if [ -z "$pathfasta" ] 
+	#-z verifie si une variable et vide
+	then 
+		echo ""
+		echo "#########################################################"  
+		echo "Telechargement sequences ARN"
+		echo "#########################################################"
+		echo ""
 
-	wget http://rssf.i2bc.paris-saclay.fr/X-fer/AtelierNGS/TPrnaseq.tar.gz -P $pathData
-	# wget [url] -P [dossier]
-	tar -zxvf $pathData/TPrnaseq.tar.gz -C $pathData
-	# tar -zxvf [fichier_à_desarchiver] -C dossier cible
+		wget http://rssf.i2bc.paris-saclay.fr/X-fer/AtelierNGS/TPrnaseq.tar.gz -P $pathData
+		# wget [url] -P [dossier]
+		tar -zxvf $pathData/TPrnaseq.tar.gz -C $pathData
+		# tar -zxvf [fichier_à_desarchiver] -C dossier cible
+		pathfasta= "$pathData" 
+		# on indique le chemin du dossier fasta (celui qu'on vient de créer)
+	fi 
+
 
 	### genome humain :
 
@@ -49,7 +74,7 @@ then
 	wget ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/GRCh37_mapping/gencode.v24lift37.basic.annotation.gtf.gz -P $pathData
 	gunzip $pathData/gencode.v24lift37.basic.annotation.gtf.gz # decompresser format gtf
 
-	chmod +rx $pathData/*.fastq #blocage plus loin si pas les droits
+	chmod +rx $pathfasta/*.fastq #blocage plus loin si pas les droits
 
 fi
 
@@ -75,22 +100,24 @@ fi
 #### 1. fastqc
 ########################
 
-if [ ! -d "$pathResult"/"$resultFastqc" ] # si pas le dossier fastqc : on fait etape fastqc
-#-d est utilisée dans Bash pour vérifier si un répertoire (dossier) existe
+if [  $All -eq 1 ] # si on fait toutes les étapes : on fait celle de fastqc
 then
-	echo ""
-	echo "#########################################################"  
-	echo "Etape fastqc"
-	echo "#########################################################"
-	echo ""
+	if [ ! -d "$pathResult"/"$resultFastqc" ] # si pas le dossier fastqc : on fait etape fastqc
+	#-d est utilisée dans Bash pour vérifier si un répertoire (dossier) existe
+	then
+		echo ""
+		echo "#########################################################"  
+		echo "Etape fastqc"
+		echo "#########################################################"
+		echo ""
 
-	mkdir $pathResult/$resultFastqc
+		mkdir $pathResult/$resultFastqc
 
-	fastqc $pathData/*.fastq -o $pathResult/$resultFastqc
-	# fastqc [fichier (wildcard possible)] -o dossier cible
-	# donne .html et .zip 
+		fastqc $pathfasta/*.fastq -o $pathResult/$resultFastqc
+		# fastqc [fichier (wildcard possible)] -o dossier cible
+		# donne .html et .zip 
+	fi
 fi
-
 
 
 
@@ -114,7 +141,7 @@ then
 	mkdir $pathResult/$resultTrim
 
 
-	fileR1=$( ls "$pathData"/*.R1.fastq ) # on recupère les noms (complets) des fichiers R1
+	fileR1=$( ls "$pathfasta"/*.R1.fastq ) # on recupère les noms (complets) des fichiers R1
 	#ATTENTION : faut coller le '=' sinon erreur
 
 
@@ -131,20 +158,22 @@ then
 		
 		
 		# on regarde si sa version R2 existe :
-		if [ -f "$pathData"/"$nameFile".R2.fastq ]
+		if [ -f "$pathfasta"/"$nameFile".R2.fastq ]
 		# -f : Vérifie spécifiquement si un chemin correspond à un fichier existant (pas un répertoire).
 		then 
 			# si oui : on applique trimmomatic
-			trimmomatic PE $i "$pathData"/"$nameFile".R2.fastq -baseout "$pathResult"/"$resultTrim"/"$nameFile".fastq LEADING:20 TRAILING:20 MINLEN:50
+			trimmomatic PE $i "$pathfasta"/"$nameFile".R2.fastq -baseout "$pathResult"/"$resultTrim"/"$nameFile".fastq LEADING:20 TRAILING:20 MINLEN:50
 			# trimmomatic PE fileR1 fileR2 -baseout fileResult LEADING:20 TRAILING:20 MINLEN:50
 
 		fi 					
 	done
 
-
-	### fastqc des trim (que pour ceux qui ont paire de read)
-	mkdir $pathResult/$resultTrim/$resultTrimFastqc
-	fastqc $pathResult/$resultTrim/*P.fastq -o $pathResult/$resultTrim/$resultTrimFastqc
+	if [  $All -eq 1 ] # on fait fastqc ? 
+	then
+		### fastqc des trim (que pour ceux qui ont paire de read)
+		mkdir $pathResult/$resultTrim/$resultTrimFastqc
+		fastqc $pathResult/$resultTrim/*P.fastq -o $pathResult/$resultTrim/$resultTrimFastqc
+	fi
 
 fi	
 
@@ -195,7 +224,6 @@ then
 	done
 
 
-
 fi
 
 ########################
@@ -203,7 +231,7 @@ fi
 ########################
 
 
-### VERSION 1 DU IF (avec find)
+### VERSION 1 DU IF (avec find) [ne pas lire]
 #if ! find "$pathResult"/"$resultStar"/"$resultStaralign" -type f -name "*.bai" | grep -q . # si pas de bai : on fait etape samtools
 
 # find: C'est la commande principale que vous utilisez pour rechercher des fichiers et des répertoires dans un système de fichiers.
@@ -221,36 +249,39 @@ fi
 
 # on met ! pour inverser le resultat : action si grep trouve rien
 
-
-# VERSION 2 (avec ls, donc plus efficace)
-if  ! ls "$pathResult/$resultStar/$resultStaralign"/*.bai 1>/dev/null 2>&1
-# 1>/dev/null 2>&1: Cette partie redirige la sortie standard (stdout) et la sortie d'erreur standard (stderr) de la commande ls vers /dev/null, 
-# ce qui signifie que la sortie de ls est supprimée et ne sera pas affichée à l'écran.
-#
-# 1> : Cela signifie "rediriger la sortie standard (stdout)". 
-# Le 1 représente le descripteur de fichier standard pour la sortie standard (qui est généralement le terminal).
-# /dev/null : Tout ce qui est écrit dans /dev/null est jeté, ce qui signifie qu'il disparaît. 
-# 2>&1 : Cela signifie "rediriger la sortie d'erreur standard (stderr) vers la sortie standard (stdout)". 
-# Le 2 représente le descripteur de fichier standard pour la sortie d'erreur standard.
-#
-# =>  les deux sorties sont supprimées (celle du ls et celle de l'erreur) car redirigé vers dev/null
-# permet de ne pas afficher le ls
-
-# if est vrai si il existe des bai : donc met ! 
+if [  $All -eq 1 ] # on fait samtools ?
 then
 
-	echo ""
-	echo "#########################################################"  
-	echo "Etape samtools"
-	echo "#########################################################"
-	echo ""
+	# VERSION 2 (avec ls, donc plus efficace)
+	if  ! ls "$pathResult/$resultStar/$resultStaralign"/*.bai 1>/dev/null 2>&1
+	# 1>/dev/null 2>&1: Cette partie redirige la sortie standard (stdout) et la sortie d'erreur standard (stderr) de la commande ls vers /dev/null, 
+	# ce qui signifie que la sortie de ls est supprimée et ne sera pas affichée à l'écran.
+	#
+	# 1> : Cela signifie "rediriger la sortie standard (stdout)". 
+	# Le 1 représente le descripteur de fichier standard pour la sortie standard (qui est généralement le terminal).
+	# /dev/null : Tout ce qui est écrit dans /dev/null est jeté, ce qui signifie qu'il disparaît. 
+	# 2>&1 : Cela signifie "rediriger la sortie d'erreur standard (stderr) vers la sortie standard (stdout)". 
+	# Le 2 représente le descripteur de fichier standard pour la sortie d'erreur standard.
+	#
+	# =>  les deux sorties sont supprimées (celle du ls et celle de l'erreur) car redirigé vers dev/null
+	# permet de ne pas afficher le ls
 
-	fileBam=$( ls "$pathResult"/"$resultStar"/"$resultStaralign"/*.bam ) # liste des fichier  bam
-	for i in ${fileBam} # pour chacun d'eux :
-	do
-		samtools index $i 
-		
-	done
+	# if est vrai si il existe des bai : donc met ! 
+	then
+
+		echo ""
+		echo "#########################################################"  
+		echo "Etape samtools"
+		echo "#########################################################"
+		echo ""
+
+		fileBam=$( ls "$pathResult"/"$resultStar"/"$resultStaralign"/*.bam ) # liste des fichier  bam
+		for i in ${fileBam} # pour chacun d'eux :
+		do
+			samtools index $i 
+			
+		done
+	fi
 fi
 
 ########################
@@ -326,5 +357,6 @@ then
 	>  $pathResult/$resultFeatureCounts/tableCounts.txt
 
 fi
+
 
 

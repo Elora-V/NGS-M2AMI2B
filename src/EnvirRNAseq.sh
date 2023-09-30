@@ -49,7 +49,9 @@ echo "Installation fastqc"
 echo "#########################################################"
 echo ""
 
-conda install -c bioconda fastqc 
+conda install -c bioconda fastqc -y
+
+# -y pour dire 'oui' à la question posée lors du téléchargement
 
 echo ""
 echo "#########################################################"  
@@ -57,7 +59,7 @@ echo "Installation trimmomatic"
 echo "#########################################################"
 echo ""
 
-conda install -c bioconda trimmomatic 
+conda install -c bioconda trimmomatic -y
 
 echo ""
 echo "#########################################################"  
@@ -65,7 +67,7 @@ echo "Installation star"
 echo "#########################################################"
 echo ""
 
-conda install -c bioconda star 
+conda install -c bioconda star -y
 
 echo ""
 echo "#########################################################"  
@@ -73,7 +75,7 @@ echo "Installation samtools"
 echo "#########################################################"
 echo ""
 
-conda install -c bioconda samtools 
+conda install -c bioconda samtools -y
 
 
 
@@ -83,7 +85,7 @@ echo "Installation subread (feature count)"
 echo "#########################################################"
 echo ""
 
-conda install -c bioconda subread
+conda install -c bioconda subread -y
 
 
 ########################
@@ -98,5 +100,6 @@ conda install -c bioconda subread
 
 # Vers VM (en local) : scp source target 
 # scp cheminLocal ubuntu@134.158.248.133:.
+
 
 
