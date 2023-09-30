@@ -2,11 +2,22 @@
 
 <h2> Version courte des commandes </h2>
 
+- Si les données fasta sont à télécharger :
+
 ```bash
 git clone https://github.com/Elora-V/NGS-M2AMI2B.git
 cd NGS-M2AMI2B
 source ./src/EnvirRNAseq.sh
 sh ./src/AnalyseRNAseq.sh
+ ```
+
+- Si les données fasta sont déjà dans un dossier :
+
+```bash
+git clone https://github.com/Elora-V/NGS-M2AMI2B.git
+cd NGS-M2AMI2B
+source ./src/EnvirRNAseq.sh
+sh ./src/AnalyseRNAseq.sh -d <pathDirectoryFasta>
  ```
 
 
@@ -60,6 +71,11 @@ scp cheminLocal ubuntu@134.158.248.133:${chemin sur VM ou .}
 
 ```bash 
 sh ./src/AnalyseRNAseq.sh
+# -a : indique si l'on veut faire les atapes fastqc et samtools ou non;
+#      si on fait tous " -a true" ou "-a t" ou "-a T" ou "-a True"
+# -d : chemin vers le dossier contenat les fasta;
+#      si vous n'avez pas les fasta ne pas mettre l'argument
+
 ```
 
 Ce script crée un dossier `data`où sont les fasta à analyser, et un dossier `result` comprennant les résultats des différentes étapes.
