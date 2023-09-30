@@ -1,5 +1,17 @@
 # NGS-M2AMI2B
 
+<h2> Version courte des commandes </h2>
+
+```bash
+git clone https://github.com/Elora-V/NGS-M2AMI2B.git
+cd NGS-M2AMI2B
+source ./src/EnvirRNAseq.sh
+sh ./src/AnalyseRNAseq.sh
+ ```
+
+
+<h2> Version détaillée des commandes </h2>
+
 
 <h3> Connection à la machine virtuelle </h3>
 
