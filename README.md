@@ -71,10 +71,10 @@ scp cheminLocal ubuntu@134.158.248.133:${chemin sur VM ou .}
 
 ```bash 
 sh ./src/AnalyseRNAseq.sh
-# -a : indique si l'on veut faire les atapes fastqc et samtools ou non;
-#      si on fait tous " -a true" ou "-a t" ou "-a T" ou "-a True"
-# -d : chemin vers le dossier contenat les fasta;
-#      si vous n'avez pas les fasta ne pas mettre l'argument
+# -a : indique si l'on veut faire les étapes fastqc et samtools ou non;
+#      si on fait tout " -a true" ou "-a t" ou "-a T" ou "-a True"
+# -d : chemin vers le dossier contenant les fasta;
+#      si vous n'avez pas les fasta : ne pas mettre l'argument
 
 ```
 
