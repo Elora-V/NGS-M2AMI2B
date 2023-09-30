@@ -7,7 +7,7 @@ while getopts a:d: flag
 do
     case "${flag}" in
         a) all=${OPTARG};;  # indique si on veut faire les étapes fastqc et d'index (vrai si on veut, faux sinon)
-        d) pathfasta=${OPTARG};; # chemin vers le dossier contenat les fichiers fasta
+        d) directory=${OPTARG};; # chemin vers le dossier contenat les fichiers fasta
     esac
 done
 
@@ -20,7 +20,13 @@ else
   All=0 # faux
 fi
 
-echo $pathfasta
+# si on ne donne pas de dossier, alors on utilise le même que celui qui contiendra le genome et les annotations
+if [ -z "$directory" ] #-z verifie si une variable et vide
+then
+	pathfasta="$pathData" 
+else # sinon c'est le dossier donné
+	pathfasta="$directory"
+fi
 
 ########################
 ### 0. get file fasta
@@ -35,8 +41,8 @@ then
 	### sequences ARN :
 
 	# si on a pas un chemin vers les fasta on les télécharge :
-	if [ -z "$pathfasta" ] 
-	#-z verifie si une variable et vide
+	if [ -z "$directory" ] 
+	
 	then 
 		echo ""
 		echo "#########################################################"  
@@ -44,14 +50,11 @@ then
 		echo "#########################################################"
 		echo ""
 
-		wget http://rssf.i2bc.paris-saclay.fr/X-fer/AtelierNGS/TPrnaseq.tar.gz -P $pathData
+		wget http://rssf.i2bc.paris-saclay.fr/X-fer/AtelierNGS/TPrnaseq.tar.gz -P $pathfasta
 		# wget [url] -P [dossier]
-		tar -zxvf $pathData/TPrnaseq.tar.gz -C $pathData
+		tar -zxvf $pathfasta/TPrnaseq.tar.gz -C $pathfasta
 		# tar -zxvf [fichier_à_desarchiver] -C dossier cible
-		pathfasta="$pathData" 
-		# on indique le chemin du dossier fasta (celui qu'on vient de créer)
-		echo $pathData
-		echo $pathfasta
+		
 	fi 
 
 
