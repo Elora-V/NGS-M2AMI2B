@@ -20,6 +20,7 @@ else
   All=0 # faux
 fi
 
+echo $pathfasta
 
 ########################
 ### 0. get file fasta
@@ -47,8 +48,10 @@ then
 		# wget [url] -P [dossier]
 		tar -zxvf $pathData/TPrnaseq.tar.gz -C $pathData
 		# tar -zxvf [fichier_à_desarchiver] -C dossier cible
-		pathfasta= "$pathData" 
+		pathfasta="$pathData" 
 		# on indique le chemin du dossier fasta (celui qu'on vient de créer)
+		echo $pathData
+		echo $pathfasta
 	fi 
 
 
