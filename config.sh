@@ -1,9 +1,9 @@
 
 #!/bin/bash
 
-pathCode="./src"
-pathData="./data"
-pathResult="./result"
+pathCode="src"
+pathData="data"
+pathResult="result"
 
 # Les noms suivants peuvent être modifiés pour choisir le nom des dossiers de résultats.
 
