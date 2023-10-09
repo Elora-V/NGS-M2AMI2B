@@ -156,8 +156,9 @@ then
 	mkdir $pathResult/$resultTrim/$resultTrimFastqc
 	fastqc $pathResult/$resultTrim/*P.fastq -o $pathResult/$resultTrim/$resultTrimFastqc
 	
-
 fi
+
+chmod +rw "$pathResult"/"$resultTrim"/*.fastq
 
 
 ########################
@@ -179,7 +180,7 @@ then
 
 
 	### index 
-    bwa index -a bwtsw $pathData/chr16.fa # met tout seul dans le même dossier que le genome de ref
+    #bwa index -a bwtsw $pathData/chr16.fa # met tout seul dans le même dossier que le genome de ref
 
     # mapping
 
@@ -192,10 +193,10 @@ then
 
 
 		# applique BWA sur R1 - R2
-        bwa mem -M -t 2 -A 2 -E 1 $pathData/chr16.fa \
+        bwa mem -M -t 2 -A 2 -E 1 "$pathData/chr16.fa" \
          "$name"1P.fastq  \
           "$name"2P.fastq  >  \
-        "$result"/"$result_bwa"/"$nameFile".sam   ## BUG !!!
+         "$result/$result_bwa/$name.sam"   ## BUG !!!
 
 
         # Options used:
