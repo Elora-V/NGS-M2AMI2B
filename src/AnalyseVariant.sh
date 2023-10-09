@@ -11,6 +11,12 @@ do
     esac
 done
 
+if [ -z "$fastaFile" ] #-z verifie si une variable et vide
+then
+	pathfasta="$pathData" 
+else # sinon c'est le dossier donné
+	pathfasta="$fastaFile"
+fi
 
 if [ ! -d "$pathResult" ] # si pas le dossier pour ranger les resultats :
 #-d est utilisée dans Bash pour vérifier si un répertoire (dossier) existe
@@ -36,12 +42,31 @@ then
     then
 	    mkdir $pathData 
 
+        # si on a pas un chemin vers les fasta on les télécharge :
+        if [ -z "$directory" ] 
+        
+        then 
+            echo ""
+            echo "#########################################################"  
+            echo "Telechargement fasta"
+            echo "#########################################################"
+            echo ""
+
+            wget --load-cookies /tmp/cookies.txt \
+            "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt \
+            --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1DM9g8OulE1ScBk-HoaREfUZs6gurtkBe' -O- |\
+             sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1DM9g8OulE1ScBk-HoaREfUZs6gurtkBe" -O patient7.tar.gz && rm -rf /tmp/cookies.txt \
+             -P $pathData
+            
+        fi 
+
+
         echo ""
         echo "#########################################################"  
         echo "Decompresser les fasta"
         echo "#########################################################"
         echo ""
-        tar -zxvf $fastaFile -C $pathData
+        tar -zxvf $pathfasta -C $pathData
 
         ### genome humain :
 
@@ -57,7 +82,6 @@ then
     
 fi
 
-	
 
 ########################
 #### 1. fastqc
