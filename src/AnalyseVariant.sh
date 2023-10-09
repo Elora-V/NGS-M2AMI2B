@@ -4,19 +4,18 @@
 
 
 # On récupère ensuite les arguments de la ligne de commande
-while getopts f: flag
+while getopts f:read: flag
 do
     case "${flag}" in
-        f) fastaFile=${OPTARG};;  # chemin vers fichier fasta      
+        f) fastaFile=${OPTARG};;  # chemin vers fichier fasta  
+        read) suffixRead1= ${OPTARG};;  
     esac
 done
 
-if [ -z "$fastaFile" ] #-z verifie si une variable et vide
-then
-	pathfasta="$pathData" 
-else # sinon c'est le dossier donné
-	pathfasta="$fastaFile"
+if [  -z "$suffixRead" ] # suffix par defaut
+then suffixRead1="_r1F.fastq.gz"
 fi
+suffixRead2=$(echo "$suffixRead1" | sed 's/1/2/')
 
 if [ ! -d "$pathResult" ] # si pas le dossier pour ranger les resultats :
 #-d est utilisée dans Bash pour vérifier si un répertoire (dossier) existe
@@ -26,61 +25,64 @@ then
 fi
 
 
-#### AJOUT WGET SI PAS PARAM (DRIVE)
-
-
 #########################################
 #### 0. decompresser données et download
 #########################################
 
-
-if [ ! -z "$fastaFile" ] #-z verifie si une variable et vide
+if [ ! -d "$pathData" ] 
 then 
+    mkdir $pathData
 
-    if [ ! -d "$pathData" ] # si pas le dossier pour ranger les données :
-    # -d est utilisée dans Bash pour vérifier si un répertoire (dossier) existe
-    then
-	    mkdir $pathData 
+    # si on a pas un chemin vers les fasta on les télécharge 
 
-        # si on a pas un chemin vers les fasta on les télécharge :
-        if [ -z "$directory" ] 
-        
-        then 
-            echo ""
-            echo "#########################################################"  
-            echo "Telechargement fasta"
-            echo "#########################################################"
-            echo ""
-
-            wget --load-cookies /tmp/cookies.txt \
-            "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt \
-            --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1DM9g8OulE1ScBk-HoaREfUZs6gurtkBe' -O- |\
-             sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1DM9g8OulE1ScBk-HoaREfUZs6gurtkBe" -O patient7.tar.gz && rm -rf /tmp/cookies.txt \
-             -P $pathData
+    if [  -z "$fastaFile" ] #-z verifie si une variable et vide
             
-        fi 
+    then 
+                echo ""
+                echo "#########################################################"  
+                echo "Telechargement fasta"
+                echo "#########################################################"
+                echo ""
 
-
-        echo ""
-        echo "#########################################################"  
-        echo "Decompresser les fasta"
-        echo "#########################################################"
-        echo ""
-        tar -zxvf $pathfasta -C $pathData
-
-        ### genome humain :
-
-        echo ""
-        echo "#########################################################"  
-        echo "Telechargement genome humain"
-        echo "#########################################################"
-        echo ""
-
-        wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/chromosomes/chr16.fa.gz -P $pathData
-        gunzip $pathData/chr16.fa.gz # decompresser format fasta
+                wget --load-cookies /tmp/cookies.txt \
+                "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt \
+                --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1DM9g8OulE1ScBk-HoaREfUZs6gurtkBe' -O- |\
+                sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1DM9g8OulE1ScBk-HoaREfUZs6gurtkBe" -O patient7.tar.gz && rm -rf /tmp/cookies.txt \
+                
+                mv patient7.tar.gz $pathData/patient7.tar.gz
+                fastaFile=./$pathData/patient7.tar.gz
+                
     fi
     
+
+    echo ""
+    echo "#########################################################"  
+    echo "Decompresser les fasta"
+    echo "#########################################################"
+    echo ""
+    tar -zxvf $fastaFile -C $pathData
+
+    ### genome humain :
+
+    echo ""
+    echo "#########################################################"  
+    echo "Telechargement genome humain"
+    echo "#########################################################"
+    echo ""
+
+    wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/chromosomes/chr16.fa.gz -P $pathData
+    gunzip $pathData/chr16.fa.gz # decompresser format fasta
+
 fi
+
+
+# Les fasta sont dans un dossier : pas d'acces direct
+
+if  ! ls "$pathData"/*.fastq* 1>/dev/null 2>&1 # si il n'y a pas de fasta directement dans data
+then 
+    pathFasta=$(ls -d $pathData/*/)
+fi
+
 
 
 ########################
@@ -99,11 +101,10 @@ then
 
     mkdir $pathResult/$resultFastqc
 
-    fastqc $pathData/patient7.exome/*.fastq* -o $pathResult/$resultFastqc   ####AUTOMATISE LE PATIENT7.EXOME !!!!
+    fastqc $pathFasta/*.fastq* -o $pathResult/$resultFastqc   
     # fastqc [fichier (wildcard possible)] -o dossier cible
     # donne .html et .zip 
 fi
-
 
 
 ########################
@@ -124,17 +125,14 @@ then
 	mkdir $pathResult/$resultTrim
 
 
-    # PB DIRE R1 PAS TJRS PAREIL !!!
-
-
-	fileR1=$( ls "$pathData"/patient7.exome/*r1* ) # on recupère les noms (complets) des fichiers R1
+	fileR1=$( ls "$pathFasta"*"$suffixRead1") # on recupère les noms (complets) des fichiers R1
 	#ATTENTION : faut coller le '=' sinon erreur
-
 
 	for i in ${fileR1} # pour chacun d'eux :
 	do
 		# on cherche le nom du fichier avant le R1 sans le chemin complet (ce qui correspond à *) :
-		nameFile=$(basename "$i" | sed 's/_r1F.fastq.gz$//') 
+		nameFile=$(basename "$i" | sed "s/$suffixRead1$//") 
+
 		# basename enlève tout le chemin
 		# La commande | (pipe) est utilisée pour rediriger la sortie (stdout) d'une commande vers l'entrée (stdin) d'une autre commande.
 		# sed : stream editor, permet de modifier une string
@@ -144,11 +142,11 @@ then
 		
 		
 		# on regarde si sa version R2 existe :
-		if [ -f "$pathData"/patient7.exome/"$nameFile"_r2F.fastq.gz ]
+		if [ -f "$pathFasta"/"$nameFile""$suffixRead2"]
 		# -f : Vérifie spécifiquement si un chemin correspond à un fichier existant (pas un répertoire).
 		then 
 			# si oui : on applique trimmomatic
-			trimmomatic PE $i "$pathData"/patient7.exome/"$nameFile"_r2F.fastq.gz -baseout "$pathResult"/"$resultTrim"/"$nameFile".fastq LEADING:20 TRAILING:20 MINLEN:50
+			trimmomatic PE $i "$pathFasta"/"$nameFile""$suffixRead2" -baseout "$pathResult"/"$resultTrim"/"$nameFile".fastq LEADING:20 TRAILING:20 MINLEN:50
 			# trimmomatic PE fileR1 fileR2 -baseout fileResult LEADING:20 TRAILING:20 MINLEN:50
 
 		fi 					
@@ -160,7 +158,6 @@ then
 	
 
 fi
-
 
 
 ########################
@@ -180,7 +177,6 @@ then
 
 	mkdir $pathResult/$resultBWA
 
-    ### CONDITION VERIF INDEX
 
 	### index 
     bwa index -a bwtsw $pathData/chr16.fa # met tout seul dans le même dossier que le genome de ref
