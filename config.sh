@@ -14,3 +14,7 @@ resultStar="result_star"
 resultStarindex="result_star_index"
 resultStaralign="result_star_align"
 resultFeatureCounts="result_counts"
+
+resultBWA="result_bwa"
+
+
