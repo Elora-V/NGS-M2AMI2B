@@ -195,8 +195,8 @@ then
 		# applique BWA sur R1 - R2
         bwa mem -M -t 2 -A 2 -E 1 "$pathData/chr16.fa" \
          "$name"1P.fastq  \
-          "$name"2P.fastq  >  \
-         "$result/$result_bwa/$name.sam"   ## BUG !!!
+          "$name"2P.fastq    \
+         -o "$result/$result_bwa/$name.sam"   > /dev/null 2>&1 ## BUG !!!
 
 
         # Options used:
