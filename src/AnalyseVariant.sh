@@ -205,3 +205,33 @@ then
 
 
 fi
+
+
+if  ! ls ${pathResult}/${resultBWA}/*.bam 1>/dev/null 2>&1 
+# vrai si il n'existe pas de bam
+then
+
+	echo ""
+	echo "#########################################################"  
+	echo "Etape SAM"
+	echo "#########################################################"
+	echo ""
+
+    fileSAM=$( ls "$pathResult"/"$resultBWA"/*.sam )
+
+    for i in ${fileSAM} :
+    do
+        name=$( echo $i | sed 's/_.sam$//') 
+        #Sam to Bam
+        samtools view -S -b $i  > ${name}.bam
+        # flagstats
+        samtools flagstat ${name}.bam
+        #Sort Bam
+        samtools sort  ${name}.bam > ${name}_sort.bam
+        #Index bam file
+        samtools index ${name}_sort.bam
+
+
+    done
+
+fi
