@@ -190,7 +190,7 @@ then
         bwa mem -M -t 2 -A 2 -E 1 "$pathData/chr16.fa" \
          "$name"1P.fastq  \
           "$name"2P.fastq    \
-         -o "$pathResult"/"$resultBWA"/"$shortname".sam   ## BUG !!!
+         -o "$pathResult"/"$resultBWA"/"$shortname".sam   
 
 
         # Options used:
@@ -257,5 +257,13 @@ then
         name=$(basename $i | sed 's/-N//' | sed 's/.mse$//')
         varscan somatic $i $tumorFile "$pathResult"/"$resultVarscan"/$name.vcf
     done
+
+    #fileVCF=$(ls "$pathResult"/"$resultBWA"/*.vcf)
+    #for i in ${fileVCF}
+    #then
+        #grep -i 'somatic' $i > ${i}_filter
+        #awk '{OFS="\t"; if (!/^#/){print $1,$2-1,$2,$4"/"$5,"+"}}' \
+        #[path/to/filtered-vcf] > [path/to/bed-file]
+    #done
 
 fi
