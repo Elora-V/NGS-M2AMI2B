@@ -219,7 +219,7 @@ then
 
     fileSAM=$( ls "$pathResult"/"$resultBWA"/*.sam )
 
-    for i in ${fileSAM} :
+    for i in ${fileSAM} 
     do
         name=$( echo $i | sed 's/_.sam$//') 
         #Sam to Bam
@@ -232,10 +232,30 @@ then
         samtools index ${name}_sort.bam
         #Convert to Mpileup
         samtools mpileup -B -A -f $pathData/chr16.fa  ${name}_sort.bam > \
-        ${name}.msf
+        ${name}.mse
 
     done
 
 fi
 
 
+if [ ! -d "$pathResult"/"$resultVarscan" ] # si pas le dossier bwa : on fait etape bwa
+then 
+	echo ""
+	echo "#########################################################"  
+	echo "Etape varscan"
+	echo "#########################################################"
+	echo ""
+
+    mkdir "$pathResult"/"$resultVarscan"
+
+    normalFile=$(ls "$pathResult"/"$resultBWA"/*-N-*.mse)
+
+    for i in ${normalFile} 
+    do
+        tumorFile=$(echo "$i" | sed 's/-N-/-T-/')
+        name=$(basename $i | sed 's/-N//' | sed 's/.mse$//')
+        varscan somatic $i $tumorFile "$pathResult"/"$resultVarscan"/$name.vcf
+    done
+
+fi

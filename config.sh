@@ -16,5 +16,5 @@ resultStaralign="result_star_align"
 resultFeatureCounts="result_counts"
 
 resultBWA="result_bwa"
-
+resultVarscan="result_varscan"
 
