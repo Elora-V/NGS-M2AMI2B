@@ -1,8 +1,9 @@
 # NGS-M2AMI2B
 
-<h1> TP RNA-Seq </h1>
-
 <h2> Version courte des commandes </h2>
+
+<h3> TP RNA-Seq </h3>
+
 
 - Si les données fasta sont à télécharger :
 
@@ -22,7 +23,7 @@ source ./src/EnvirRNAseq.sh
 sh ./src/AnalyseRNAseq.sh -d <pathDirectoryFasta>
  ```
 
-<h1> TP Variant </h1>
+<h3> TP Variant </h3>
 
 - Si les données fasta sont à télécharger :
 
@@ -42,7 +43,7 @@ source ./src/EnvirVariant.sh
 sh ./src/AnalyseVariant.sh -f <pathDirectoryFasta>
  ```
 
-<h1> Version détaillée des commandes </h1>
+<h2> Version détaillée des commandes </h2>
 
 Les détails des commandes sont fait pour le TP RNA-seq, mais c'est similaire pour le TP variant.
 
