@@ -230,8 +230,12 @@ then
         samtools sort  ${name}.bam > ${name}_sort.bam
         #Index bam file
         samtools index ${name}_sort.bam
-
+        #Convert to Mpileup
+        samtools mpileup -B -A -f $pathData/chr16.fa  ${name}_sort.bam > \
+        ${name}.msf
 
     done
 
 fi
+
+
