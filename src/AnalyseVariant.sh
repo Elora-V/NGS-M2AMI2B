@@ -140,16 +140,10 @@ then
 		# $ est la fin d'une string,
 		#  // pour remplacer par chaine vide
 		
-		
-		# on regarde si sa version R2 existe :
-		if [ -f "$pathFasta"/"$nameFile""$suffixRead2"]
-		# -f : Vérifie spécifiquement si un chemin correspond à un fichier existant (pas un répertoire).
-		then 
-			# si oui : on applique trimmomatic
-			trimmomatic PE $i "$pathFasta"/"$nameFile""$suffixRead2" -baseout "$pathResult"/"$resultTrim"/"$nameFile".fastq LEADING:20 TRAILING:20 MINLEN:50
-			# trimmomatic PE fileR1 fileR2 -baseout fileResult LEADING:20 TRAILING:20 MINLEN:50
 
-		fi 					
+        # trimmomatic PE fileR1 fileR2 -baseout fileResult LEADING:20 TRAILING:20 MINLEN:50
+        trimmomatic PE $i ${pathFasta}${nameFile}${suffixRead2} -baseout ${pathResult}/${resultTrim}/${nameFile}.fastq LEADING:20 TRAILING:20 MINLEN:50
+
 	done
 
 	### fastqc des trim (que pour ceux qui ont paire de read)
@@ -180,7 +174,7 @@ then
 
 
 	### index 
-    #bwa index -a bwtsw $pathData/chr16.fa # met tout seul dans le même dossier que le genome de ref
+    bwa index -a bwtsw $pathData/chr16.fa # met tout seul dans le même dossier que le genome de ref
 
     # mapping
 
@@ -189,14 +183,14 @@ then
 	for i in ${fileP1trim} # pour chacun d'eux :
 	do
 		# on cherche le nom du fichier avant le 1P sans le chemin complet (ce qui correspond à *) :
-		name=$( "$i" | sed 's/1P.fastq$//') 
-
+		name=$( echo $i | sed 's/1P.fastq$//') 
+        shortname=$( basename $name )
 
 		# applique BWA sur R1 - R2
         bwa mem -M -t 2 -A 2 -E 1 "$pathData/chr16.fa" \
          "$name"1P.fastq  \
           "$name"2P.fastq    \
-         -o "$result/$result_bwa/$name.sam"   > /dev/null 2>&1 ## BUG !!!
+         -o "$pathResult"/"$resultBWA"/"$shortname".sam   ## BUG !!!
 
 
         # Options used:

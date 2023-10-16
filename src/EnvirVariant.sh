@@ -70,6 +70,15 @@ echo ""
 
 conda install -c bioconda bwa -y
 
+
+echo ""
+echo "#########################################################"  
+echo "Installation samtools"
+echo "#########################################################"
+echo ""
+
+conda install -c bioconda samtools -y
+
 echo ""
 echo "#########################################################"  
 echo "Installation varscan"
