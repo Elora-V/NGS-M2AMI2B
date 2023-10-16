@@ -1,5 +1,7 @@
 # NGS-M2AMI2B
 
+<h1> TP RNA-Seq </h1>
+
 <h2> Version courte des commandes </h2>
 
 - Si les données fasta sont à télécharger :
@@ -20,9 +22,29 @@ source ./src/EnvirRNAseq.sh
 sh ./src/AnalyseRNAseq.sh -d <pathDirectoryFasta>
  ```
 
+<h1> TP Variant </h1>
 
-<h2> Version détaillée des commandes </h2>
+- Si les données fasta sont à télécharger :
 
+```bash
+git clone https://github.com/Elora-V/NGS-M2AMI2B.git
+cd NGS-M2AMI2B
+source ./src/EnvirVariant.sh
+sh ./src/AnalyseVariant.sh
+ ```
+
+- Si les données fasta sont déjà dans un dossier :
+
+```bash
+git clone https://github.com/Elora-V/NGS-M2AMI2B.git
+cd NGS-M2AMI2B
+source ./src/EnvirVariant.sh
+sh ./src/AnalyseVariant.sh -f <pathDirectoryFasta>
+ ```
+
+<h1> Version détaillée des commandes </h1>
+
+Les détails des commandes sont fait pour le TP RNA-seq, mais c'est similaire pour le TP variant.
 
 <h3> Connection à la machine virtuelle </h3>
 
@@ -55,7 +77,7 @@ cd NGS-M2AMI2B
 - Installation outils
 
 ```bash 
-source ./src/EnvirRNAseq.sh
+source ./src/EnvirRNAseq.sh 
 # mettre source est non pas sh est important: sinon cela entraine un probleme d'environnement conda 
 #(conda activate ne fonctionne pas dans le script alors qu'il fonctionne en ligne de commande directement dans le terminal)
 ```
