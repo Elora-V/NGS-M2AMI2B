@@ -1,5 +1,7 @@
 # NGS-M2AMI2B
 
+Il y a deux analyses possibles, pour faire les deux il faut supprimer les dossiers de la première ou changer les noms de dossier dans config.sh entre les deux. Sinon il va y avoir des problèmes lié aux noms de dossier de résulats similaires entre les deux analyses.
+
 <h2> Version courte des commandes </h2>
 
 <h3> TP RNA-Seq </h3>
