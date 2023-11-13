@@ -239,7 +239,7 @@ then
 fi
 
 
-if [ ! -d "$pathResult"/"$resultVarscan" ] # si pas le dossier bwa : on fait etape bwa
+if [ ! -d "$pathResult"/"$resultVarscan" ] # si pas le dossier varscan : on fait etape bwa
 then 
 	echo ""
 	echo "#########################################################"  
@@ -258,12 +258,30 @@ then
         varscan somatic $i $tumorFile "$pathResult"/"$resultVarscan"/$name.vcf
     done
 
-    #fileVCF=$(ls "$pathResult"/"$resultBWA"/*.vcf)
-    #for i in ${fileVCF}
-    #then
-        #grep -i 'somatic' $i > ${i}_filter
-        #awk '{OFS="\t"; if (!/^#/){print $1,$2-1,$2,$4"/"$5,"+"}}' \
-        #[path/to/filtered-vcf] > [path/to/bed-file]
-    #done
+
+
+    fileVCF=$(ls "$pathResult"/"$resultVarscan"/*.vcf*)
+    for i in ${fileVCF}
+    do
+        grep -i 'somatic' $i > ${i}.vcf
+        awk '{OFS="\t"; if (!/^#/){print $1,$2-1,$2,$4"/"$5,"+"}}' \
+        ${i}.vcf > ${i}.bed
+    done
+
+    if [ ! -f "gencode.v24lift37.basic.annotation.gtf.gz"  ]
+    then 
+        wget "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/GRCh37_mapping/gencode.v24lift37.basic.annotation.gtf.gz"
+        gzip -d gencode.v24lift37.basic.annotation.gtf.gz
+
+    fi
+
+    
+    fileBed=$(ls "$pathResult"/"$resultVarscan"/*.bed)
+    for i in ${fileBed}
+    do
+        bedtools intersect -a ./gencode.v24lift37.basic.annotation.gtf -b ${i} > ${i}_inter
+        grep '\sgene\s' ${i}_inter | awk '{print " " $1 " " $4 " " $5 " " $16}' > ${i}.annot
+    done
+
 
 fi

@@ -86,3 +86,12 @@ echo "#########################################################"
 echo ""
 
 conda install -c bioconda varscan -y
+
+
+echo ""
+echo "#########################################################"  
+echo "Installation bedtools"
+echo "#########################################################"
+echo ""
+
+conda install -c bioconda bedtools -y
