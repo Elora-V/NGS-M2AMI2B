@@ -255,6 +255,7 @@ then
     do
         tumorFile=$(echo "$i" | sed 's/-N-/-T-/')
         name=$(basename $i | sed 's/-N//' | sed 's/.mse$//')
+        # creation de liste de variant (utilisation varscan)
         varscan somatic $i $tumorFile "$pathResult"/"$resultVarscan"/$name.vcf
     done
 
@@ -263,13 +264,15 @@ then
     fileVCF=$(ls "$pathResult"/"$resultVarscan"/*.vcf*)
     for i in ${fileVCF}
     do
+        # on récupère les variants sommatiques
         grep -i 'somatic' $i > ${i}.vcf
         awk '{OFS="\t"; if (!/^#/){print $1,$2-1,$2,$4"/"$5,"+"}}' \
-        ${i}.vcf > ${i}.bed
+        ${i}.vcf > ${i}.bed # et on les converti au format bed
     done
 
     if [ ! -f "gencode.v24lift37.basic.annotation.gtf.gz"  ]
     then 
+        # on récupère un fichier d'annotation
         wget "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_24/GRCh37_mapping/gencode.v24lift37.basic.annotation.gtf.gz"
         gzip -d gencode.v24lift37.basic.annotation.gtf.gz
 
@@ -279,6 +282,7 @@ then
     fileBed=$(ls "$pathResult"/"$resultVarscan"/*.bed)
     for i in ${fileBed}
     do
+        # on fait l'intersection entre les gènes et les positions des mutations trouvées
         bedtools intersect -a ./gencode.v24lift37.basic.annotation.gtf -b ${i} > ${i}_inter
         grep '\sgene\s' ${i}_inter | awk '{print " " $1 " " $4 " " $5 " " $16}' > ${i}.annot
     done
